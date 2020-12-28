@@ -3,33 +3,28 @@ import Routes from './routes/';
 
 //Import Scss
 import "./assets/scss/themes.scss";
+import Client from "./irc/irc"
+//import fakeBackend from './helpers/fake-backend';
+import {INIT_STATE , Handler} from "./reducer"
 
-//fackbackend
-import fakeBackend from './helpers/fake-backend';
+//fakeBackend();
 
-// //Firebase helper
-// import { initFirebaseBackend } from "./helpers/firebase";
-
-// TODO
-fakeBackend();
-
-// const firebaseConfig = {
-// 	apiKey: process.env.REACT_APP_APIKEY,
-// 	authDomain: process.env.REACT_APP_AUTHDOMAIN,
-// 	databaseURL: process.env.REACT_APP_DATABASEURL,
-// 	projectId: process.env.REACT_APP_PROJECTID,
-// 	storageBucket: process.env.REACT_APP_STORAGEBUCKET,
-// 	messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-// 	appId: process.env.REACT_APP_APPID,
-// 	measurementId: process.env.REACT_APP_MEASUREMENTID,
-// };
-  
-// // init firebase backend
-// initFirebaseBackend(firebaseConfig);
-
+export const Context = React.createContext();
+const irc = new Client()
 function App() {
+  const [state, dispatch] = React.useReducer(Handler , INIT_STATE)
+  irc.addListener('join' ,(e)=> {
+    dispatch({
+      type: 'ADD_LOGGED_USER' ,
+      payload:  {id : 100, name : "Adil", profilePicture : "Null", status : "away",unRead : 2, isGroup: false, messages: []} 
+    })
+    console.log(`trigerring`)
+})
   return (
-    <Routes />
+   
+    <Context.Provider value={{'state': state, 'dispatch' : dispatch}}>
+       <Routes />
+    </Context.Provider>
   );
 }
 

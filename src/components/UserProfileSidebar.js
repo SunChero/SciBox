@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import avatar7 from "../assets/images/users/avatar-7.jpg";
 
 function UserProfileSidebar(props) {
-
+    console.log(props)
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen3, setIsOpen3] = useState(false);
@@ -53,7 +53,7 @@ function UserProfileSidebar(props) {
 
     // closes sidebar
     const closeuserSidebar=()=> {
-        props.closeUserSidebar();
+        props.dispatch({type: 'CLOSE_USER_PROFILE_SIDEBAR'})
     }
     // style={{display: props.userSidebar  ? "block" : "none"}}
     return (
@@ -243,10 +243,11 @@ function UserProfileSidebar(props) {
     );
 }
 
-const mapStateToProps = (state) => {
-    const { users,active_user } = state.Chat;
-    const { userSidebar } = state.Layout;
-    return { users,active_user,userSidebar };
-};
+// const mapStateToProps = (state) => {
+//     const { users,active_user } = state.Chat;
+//     const { userSidebar } = state.Layout;
+//     return { users,active_user,userSidebar };
+// };
 
-export default connect(mapStateToProps, { closeUserSidebar })(UserProfileSidebar);
+//export default connect(mapStateToProps, { closeUserSidebar })(UserProfileSidebar);
+export default UserProfileSidebar

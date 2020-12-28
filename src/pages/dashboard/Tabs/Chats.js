@@ -68,12 +68,12 @@ class Chats extends Component {
     openUserChat(e,chat) {
 
         e.preventDefault();
-
+        
         //find index of current chat in array
         var index = this.props.recentChatList.indexOf(chat);
-
+        console.log(`moving to ${index}`)
         // set activeUser 
-        this.props.activeUser(index);
+        this.props.dispatch({type: 'ACTIVE_USER' , payload : index});
 
         var chatList = document.getElementById("chat-list");
         var clickedItem = e.target;
@@ -217,9 +217,9 @@ class Chats extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    const { active_user } = state.Chat;
-    return { active_user };
-};
+// const mapStateToProps = (state) => {
+//     const { active_user } = state.Chat;
+//     return { active_user };
+// };
 
-export default connect(mapStateToProps, { setconversationNameInOpenChat, activeUser })(Chats);
+export default Chats

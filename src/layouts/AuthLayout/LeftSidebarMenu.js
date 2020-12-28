@@ -2,14 +2,10 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Nav, NavItem, NavLink, UncontrolledTooltip, Dropdown, DropdownItem, DropdownToggle, DropdownMenu } from "reactstrap";
 import classnames from "classnames";
-import { connect } from "react-redux";
 
-import { setActiveTab } from "../../redux/actions";
-
-//Import Images
 import logo from "../../assets/images/logo.svg"
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
-
+import {Context} from "../../App"
 //i18n
 import i18n from '../../i18n';
 
@@ -21,22 +17,25 @@ import italy from "../../assets/images/flags/italy.jpg";
 import russia from "../../assets/images/flags/russia.jpg";
 
 function LeftSidebarMenu(props) {
+    const {state, dispatch} = React.useContext(Context)
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownOpen2, setDropdownOpen2] = useState(false);
     const [dropdownOpenMobile, setDropdownOpenMobile] = useState(false);
     const [ lng, setlng ] = useState("English");
 
-
     const toggle = () => setDropdownOpen(!dropdownOpen);
     const toggle2 = () => setDropdownOpen2(!dropdownOpen2);
     const toggleMobile = () => setDropdownOpenMobile(!dropdownOpenMobile);
 
     const toggleTab = tab => {
-        props.setActiveTab(tab)
+        dispatch({
+            type: 'SET_ACTIVE_TAB',
+            payload: tab
+        })
     }
-
-    const activeTab = props.activeTab;
+   
+    const activeTab = state.activeTab;
     
     /* changes language according to clicked language menu item */
     const changeLanguageAction = (lng) => {
@@ -188,12 +187,4 @@ function LeftSidebarMenu(props) {
     );
 }
 
-const mapStatetoProps = state => {
-    return {
-      ...state.Layout
-    };
-};
-
-export default connect(mapStatetoProps, {
-    setActiveTab
-})(LeftSidebarMenu);
+export default LeftSidebarMenu

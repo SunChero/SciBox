@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Media, Button, Input, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 
-import { openUserSidebar,setFullUser } from "../../../redux/actions";
 
 function UserHead(props) {
+    console.log(props)
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownOpen1, setDropdownOpen1] = useState(false);
 
@@ -14,7 +13,8 @@ function UserHead(props) {
 
     const openUserSidebar = (e) => {
         e.preventDefault();
-        props.openUserSidebar();
+        //props.openUserSidebar();
+        props.dispatch({type: 'OPEN_USER_PROFILE_SIDEBAR'})
     }
 
     function closeUserChat(e){
@@ -31,7 +31,7 @@ function UserHead(props) {
         let copyallUsers = allUsers;
         copyallUsers[props.active_user].messages =  [];
        
-        props.setFullUser(copyallUsers);
+        props.dispatch({type:"FULL_USER" , payload :copyallUsers});
     }
 
     return (
@@ -140,9 +140,10 @@ function UserHead(props) {
 }
 
 
-const mapStateToProps = (state) => {
-    const { users,active_user } = state.Chat;
-    return { ...state.Layout,users,active_user };
-};
+// const mapStateToProps = (state) => {
+//     const { users,active_user } = state.Chat;
+//     return { ...state.Layout,users,active_user };
+// };
 
-export default connect(mapStateToProps, { openUserSidebar,setFullUser })(UserHead);
+//export default connect(mapStateToProps, { openUserSidebar,setFullUser })(UserHead);
+export default UserHead

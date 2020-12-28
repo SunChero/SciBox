@@ -15,7 +15,7 @@ import ChatInput from "./ChatInput";
 import FileList from "./FileList";
 
 //actions
-import { openUserSidebar,setFullUser } from "../../../redux/actions";
+//import { openUserSidebar,setFullUser } from "../../../redux/actions";
 
 //Import Images
 import avatar4 from "../../../assets/images/users/avatar-4.jpg";
@@ -110,7 +110,8 @@ function UserChat(props) {
         let copyallUsers = [...allUsers];
         copyallUsers[props.active_user].messages = [...chatMessages, messageObj];
         copyallUsers[props.active_user].isTyping = false;
-        props.setFullUser(copyallUsers);
+        props.dispatch({type: 'FULL_USER',
+            payload:copyallUsers});
 
         scrolltoBottom();
     }
@@ -132,7 +133,7 @@ function UserChat(props) {
         setchatMessages(filtered);
     }
 
-    
+    console.log(`active user ${props.active_user}`)
     return (
         <React.Fragment>
             <div className="user-chat w-100">
@@ -142,7 +143,7 @@ function UserChat(props) {
                     <div className={ props.userSidebar ? "w-70" : "w-100" }>
 
                         {/* render user head */}
-                        <UserHead /> 
+                        <UserHead  {...props} /> 
 
                             <SimpleBar
                                 style={{ maxHeight: "100%" }}
@@ -355,7 +356,7 @@ function UserChat(props) {
                         <ChatInput onaddMessage={addMessage} />
                     </div>
 
-                    <UserProfileSidebar activeUser={props.recentChatList[props.active_user]} />
+                    <UserProfileSidebar activeUser={props.recentChatList[props.active_user]} {...props} />
 
                 </div>
             </div>
@@ -363,11 +364,12 @@ function UserChat(props) {
     );
 }
 
-const mapStateToProps = (state) => {
-    const { active_user } = state.Chat;
-    const { userSidebar } = state.Layout;
-    return { active_user,userSidebar };
-};
+// const mapStateToProps = (state) => {
+//     const { active_user } = state.Chat;
+//     const { userSidebar } = state.Layout;
+//     return { active_user,userSidebar };
+// };
 
-export default withRouter(connect(mapStateToProps, { openUserSidebar,setFullUser })(UserChat));
+//export default withRouter(connect(mapStateToProps, { openUserSidebar,setFullUser })(UserChat));
 
+export default withRouter(UserChat)

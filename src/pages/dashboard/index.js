@@ -1,35 +1,21 @@
-import React, { Component } from 'react';
-
+import React  from 'react';
 //Import Components
 import ChatLeftSidebar from "./ChatLeftSidebar";
 import UserChat from "./UserChat/";
+import {Context} from "../../App"
 
-import { connect } from "react-redux";
+export default function Index() {
+  
+    const {state, dispatch , c} = React.useContext(Context)
+    
+    return (
+        <React.Fragment>
+        {/* chat left sidebar */}
+            <ChatLeftSidebar/>
 
-class Index extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { }
-    }
-
-    render() {
+        {/* user chat */}
+            <UserChat {...state} dispatch={dispatch}/>
         
-        return (
-            <React.Fragment>
-                {/* chat left sidebar */}
-                <ChatLeftSidebar recentChatList={this.props.users} />
-
-                {/* user chat */}
-                <UserChat recentChatList={this.props.users} />
-                
-            </React.Fragment>
-        );
-    }
+        </React.Fragment>
+    )
 }
-
-const mapStateToProps = (state) => {
-    const { users } = state.Chat;
-    return { users };
-};
-
-export default connect(mapStateToProps, {  })(Index);

@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from "react-redux";
 
+import {Context} from "../../App"
 import { TabContent, TabPane } from "reactstrap";
 
 //Import Components
@@ -11,14 +11,14 @@ import Contacts from "./Tabs/Contacts";
 import Settings from "./Tabs/Settings";
 
 function ChatLeftSidebar(props) {
-
-    const activeTab = props.activeTab;
-
+    const {state, dispatch} = React.useContext(Context)
+    const activeTab = state.activeTab;
+    console.log(`thisi s the active tab ${activeTab}`)
     return (
         <React.Fragment>
             <div className="chat-leftsidebar mr-lg-1">
 
-                <TabContent activeTab={activeTab}>
+                <TabContent activeTab={state.activeTab}>
                     {/* Start Profile tab-pane */}
                     <TabPane tabId="profile" id="pills-user">
                         {/* profile content  */}
@@ -29,7 +29,7 @@ function ChatLeftSidebar(props) {
                     {/* Start chats tab-pane  */}
                     <TabPane tabId="chat" id="pills-chat">
                         {/* chats content */}
-                        <Chats recentChatList={props.recentChatList}/>
+                        <Chats {...state} dispatch={dispatch}/>
                     </TabPane>
                     {/* End chats tab-pane */}
                     
@@ -61,10 +61,4 @@ function ChatLeftSidebar(props) {
     );
 }
 
-const mapStatetoProps = state => {
-    return {
-      ...state.Layout
-    };
-};
-
-export default connect(mapStatetoProps, null)(ChatLeftSidebar);
+export default ChatLeftSidebar
