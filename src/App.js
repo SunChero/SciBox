@@ -6,7 +6,6 @@ import "./assets/scss/themes.scss";
 
 //fackbackend
 import fakeBackend from './helpers/fake-backend';
-import {store,StoreContext} from './storeb';
 
 // //Firebase helper
 // import { initFirebaseBackend } from "./helpers/firebase";
@@ -28,17 +27,9 @@ fakeBackend();
 // // init firebase backend
 // initFirebaseBackend(firebaseConfig);
 
-const StoreProvider = ( {children} ) => {
-  return (
-    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
-  );
-}
-
 function App() {
   return (
-    <StoreProvider>
-      <Routes />
-    </StoreProvider>
+    <Routes />
   );
 }
 

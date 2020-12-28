@@ -14,7 +14,6 @@ import OnlineUsers from "./OnlineUsers";
 
 class Chats extends Component {
     constructor(props) {
-
         super(props);
         this.state = {
             searchChat : "",
@@ -22,8 +21,6 @@ class Chats extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.openUserChat = this.openUserChat.bind(this);
-        console.log(this.props)
-
     }
 
     componentDidMount() {
@@ -76,8 +73,8 @@ class Chats extends Component {
         var index = this.props.recentChatList.indexOf(chat);
 
         // set activeUser 
-        //this.props.activeUser(index);
-//console.log(this.props)
+        this.props.activeUser(index);
+
         var chatList = document.getElementById("chat-list");
         var clickedItem = e.target;
         var currentli = null;
@@ -220,11 +217,9 @@ class Chats extends Component {
     }
 }
 
-// const mapStateToProps = (state) => {
-//     const { active_user } = state.Chat;
-//     return { active_user };
-// };
+const mapStateToProps = (state) => {
+    const { active_user } = state.Chat;
+    return { active_user };
+};
 
-// export default connect(mapStateToProps, { setconversationNameInOpenChat, activeUser })(Chats);
-
-export default Chats
+export default connect(mapStateToProps, { setconversationNameInOpenChat, activeUser })(Chats);

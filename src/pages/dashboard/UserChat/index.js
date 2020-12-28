@@ -25,7 +25,7 @@ import avatar1 from "../../../assets/images/users/avatar-1.jpg";
 import { useTranslation } from 'react-i18next';
 
 function UserChat(props) {
-   
+
     const ref = useRef();
 
     const [modal, setModal] = useState(false);
@@ -35,7 +35,6 @@ function UserChat(props) {
 
     //demo conversation messages
     //userType must be required
-    //props.recentChatList = props.users
     const [ allUsers ] = useState(props.recentChatList);
     const [ chatMessages, setchatMessages ] = useState(props.recentChatList[props.active_user].messages);
 

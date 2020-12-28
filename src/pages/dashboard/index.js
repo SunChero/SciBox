@@ -1,27 +1,35 @@
 import React, { Component } from 'react';
 
+//Import Components
 import ChatLeftSidebar from "./ChatLeftSidebar";
 import UserChat from "./UserChat/";
-import  {StoreContext} from "../../storeb/";
-import {observer } from "mobx-react-lite"
 
-const DashBoard =  (props) => {
-    
-    const store = React.useContext(StoreContext)
-   
-    return (
-       
+import { connect } from "react-redux";
+
+class Index extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { }
+    }
+
+    render() {
+        
+        return (
             <React.Fragment>
                 {/* chat left sidebar */}
-                <ChatLeftSidebar {...store}/>
+                <ChatLeftSidebar recentChatList={this.props.users} />
 
                 {/* user chat */}
-                <UserChat {...store  } recentChatList={store.users} />
+                <UserChat recentChatList={this.props.users} />
                 
             </React.Fragment>
-     
-    )
+        );
+    }
 }
 
+const mapStateToProps = (state) => {
+    const { users } = state.Chat;
+    return { users };
+};
 
-export default DashBoard
+export default connect(mapStateToProps, {  })(Index);
