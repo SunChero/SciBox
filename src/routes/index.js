@@ -42,7 +42,7 @@ const Routes = (props) => {
                     {/* private/auth protected routes */}
                     {authProtectedRoutes.map((route, idx) =>
                         <AppRoute path={route.path} layout={AuthLayout} component={route.component}
-                            key={idx} isAuthProtected={true} />
+                            key={idx} isAuthProtected={false} />
                     )}
                 </Switch>
                 </Suspense>

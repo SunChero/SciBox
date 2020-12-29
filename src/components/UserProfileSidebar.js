@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import avatar7 from "../assets/images/users/avatar-7.jpg";
 
 function UserProfileSidebar(props) {
-    console.log(props)
+    
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen3, setIsOpen3] = useState(false);

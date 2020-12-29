@@ -11,14 +11,14 @@ import Contacts from "./Tabs/Contacts";
 import Settings from "./Tabs/Settings";
 
 function ChatLeftSidebar(props) {
-    const {state, dispatch} = React.useContext(Context)
-    const activeTab = state.activeTab;
-    console.log(`thisi s the active tab ${activeTab}`)
+   
+    const activeTab = props.activeTab;
+    
     return (
         <React.Fragment>
             <div className="chat-leftsidebar mr-lg-1">
 
-                <TabContent activeTab={state.activeTab}>
+                <TabContent activeTab={props.activeTab}>
                     {/* Start Profile tab-pane */}
                     <TabPane tabId="profile" id="pills-user">
                         {/* profile content  */}
@@ -29,21 +29,21 @@ function ChatLeftSidebar(props) {
                     {/* Start chats tab-pane  */}
                     <TabPane tabId="chat" id="pills-chat">
                         {/* chats content */}
-                        <Chats {...state} dispatch={dispatch}/>
+                        <Chats {...props}/>
                     </TabPane>
                     {/* End chats tab-pane */}
                     
                     {/* Start groups tab-pane */}
                     <TabPane tabId="group" id="pills-groups">
                         {/* Groups content */}
-                        <Groups />
+                        <Groups {...props} />
                     </TabPane>
                     {/* End groups tab-pane */}
 
                     {/* Start contacts tab-pane */}
                     <TabPane tabId="contacts" id="pills-contacts">
                         {/* Contact content */}
-                        <Contacts />
+                        <Contacts {...props}/>
                     </TabPane>
                     {/* End contacts tab-pane */}
                     

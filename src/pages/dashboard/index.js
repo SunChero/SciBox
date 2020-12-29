@@ -11,10 +11,10 @@ export default function Index() {
     return (
         <React.Fragment>
         {/* chat left sidebar */}
-            <ChatLeftSidebar/>
+            <ChatLeftSidebar {...{dispatch , ...state}}/>
 
         {/* user chat */}
-            <UserChat {...state} dispatch={dispatch}/>
+            <UserChat {...{dispatch , ...state}}/>
         
         </React.Fragment>
     )

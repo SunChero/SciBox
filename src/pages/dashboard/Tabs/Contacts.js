@@ -170,9 +170,9 @@ class Contacts extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    const { contacts } = state.Chat;
-    return { contacts };
-};
+// const mapStateToProps = (state) => {
+//     const { contacts } = state.Chat;
+//     return { contacts };
+// };
 
-export default connect(mapStateToProps, null)(withTranslation()(Contacts));
+export default withTranslation()(Contacts);

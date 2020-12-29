@@ -107,7 +107,7 @@ function UserChat(props) {
         //add message object to chat        
         setchatMessages([...chatMessages, messageObj]);
 
-        let copyallUsers = [...allUsers];
+        let copyallUsers = props.recentChatList
         copyallUsers[props.active_user].messages = [...chatMessages, messageObj];
         copyallUsers[props.active_user].isTyping = false;
         props.dispatch({type: 'FULL_USER',

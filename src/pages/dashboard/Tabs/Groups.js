@@ -15,8 +15,10 @@ import SelectContact from "../../../components/SelectContact";
 import { createGroup } from "../../../redux/actions";
 
 class Groups extends Component {
+    
     constructor(props) {
         super(props);
+        
         this.state = {
             modal : false,
             isOpenCollapse : false,
@@ -33,6 +35,7 @@ class Groups extends Component {
         this.handleCheck = this.handleCheck.bind(this);
         this.handleChangeGroupName = this.handleChangeGroupName.bind(this);
         this.handleChangeGroupDesc = this.handleChangeGroupDesc.bind(this);
+        console.log(this.props)
     }
 
     toggle() {
@@ -65,7 +68,11 @@ class Groups extends Component {
                 members : this.state.selectedContact
             }
             //call action for creating a group
-            this.props.createGroup(obj);
+           // this.props.createGroup(obj);
+           this.props.dispatch({
+               type: 'CREATE_GROUP',
+               payload: obj
+           })
             this.toggle();
 
         } else if(this.state.selectedContact.length === 1) {
@@ -240,4 +247,4 @@ const mapStateToProps = (state) => {
     return { groups,active_user };
 };
 
-export default (connect(mapStateToProps, { createGroup })(withTranslation()(Groups)));
+export default withTranslation()(Groups);

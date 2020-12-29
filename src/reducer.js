@@ -1,21 +1,27 @@
-import React from "react"
-// @flow
-import {
-	SET_ACTIVE_TAB,
-	OPEN_USER_PROFILE_SIDEBAR,
-	CLOSE_USER_PROFILE_SIDEBAR,
-	SET_CONVERSATION_NAME_IN_OPEN_CHAT
-} from "./redux/layout/constants";
-
 import avatar2 from "./assets/images/users/avatar-2.jpg";
 import avatar4 from "./assets/images/users/avatar-4.jpg";
 import avatar3 from "./assets/images/users/avatar-3.jpg";
 import avatar6 from "./assets/images/users/avatar-6.jpg";
 import avatar7 from "./assets/images/users/avatar-7.jpg";
 import avatar8 from "./assets/images/users/avatar-8.jpg";
+
 import img6 from "./assets/images/small/img-6.jpg";
 import img4 from "./assets/images/small/img-4.jpg";
 import img7 from "./assets/images/small/img-7.jpg";
+export const LOGIN_USER = "LOGIN_USER";
+export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
+export const LOGOUT_USER = "LOGOUT_USER";
+export const REGISTER_USER = "REGISTER_USER";
+export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
+export const FORGET_PASSWORD = "FORGET_PASSWORD";
+export const FORGET_PASSWORD_SUCCESS = "FORGET_PASSWORD_SUCCESS";
+export const API_FAILED = "AUTH_API_FAILED";
+
+export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
+export const OPEN_USER_PROFILE_SIDEBAR = 'OPEN_USER_PROFILE_SIDEBAR';
+export const CLOSE_USER_PROFILE_SIDEBAR = 'CLOSE_USER_PROFILE_SIDEBAR';
+export const SET_CONVERSATION_NAME_IN_OPEN_CHAT = 'SET_CONVERSATION_NAME_IN_OPEN_CHAT';
+
 export const CHAT_USER = "CHAT_USER";
 export const ACTIVE_USER = "ACTIVE_USER";
 export const FULL_USER = "FULL_USER";
@@ -266,9 +272,8 @@ export const Handler = (state = INIT_STATE, action) => {
         case ADD_LOGGED_USER:
                 const newUser =  action.payload
                 return{
-                    ...state, recentChatList : [
-                        ...state.recentChatList, newUser
-                    ]
+                    ...state, recentChatList : [...state.recentChatList, newUser ] ,users : [...state.users, newUser ]
+                   
                 };
     
         case CREATE_GROUP :
@@ -278,6 +283,26 @@ export const Handler = (state = INIT_STATE, action) => {
                         ...state.groups, newGroup
                     ]
                 }
+        case LOGIN_USER:
+                    return { ...state, loading: true };
+        case LOGIN_USER_SUCCESS:
+                    return { ...state, user: action.payload, loading: false, error: null };
+        
+        case REGISTER_USER:
+                    return { ...state, loading: true };
+        case REGISTER_USER_SUCCESS:
+                    return { ...state, user: action.payload, loading: false, error: null };
+        
+        case LOGOUT_USER:
+                    return { ...state, user: null };
+        
+        case FORGET_PASSWORD:
+                    return { ...state, loading: true };
+        case FORGET_PASSWORD_SUCCESS:
+                    return { ...state, passwordResetStatus: action.payload, loading: false, error: null };
+        
+        case API_FAILED:
+            return { ...state, loading: false, error: action.payload };
                 
 		default:
 			return state;

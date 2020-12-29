@@ -16,10 +16,22 @@ function App() {
   irc.addListener('join' ,(e)=> {
     dispatch({
       type: 'ADD_LOGGED_USER' ,
-      payload:  {id : 100, name : "Adil", profilePicture : "Null", status : "away",unRead : 2, isGroup: false, messages: []} 
+      payload:  {id : 100, name : "#maroc", profilePicture : "Null", status : "away",unRead : 2, isGroup: true, messages: []} 
+    })
+    dispatch({
+      type: 'CREATE_GROUP' ,
+      payload:  {
+         gourpId : 150, name : "#maroc", profilePicture : "Null", isGroup : true, unRead : 0, desc : "General Group",
+            members : [
+                { userId : 1, name : "Sara Muller", profilePicture : "Null", role : null },
+              
+            ]    
+        
+      } 
     })
     console.log(`trigerring`)
 })
+
   return (
    
     <Context.Provider value={{'state': state, 'dispatch' : dispatch}}>
