@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { Container, Row, Col, Card, CardBody, FormGroup, Alert, Form, Input, Button, FormFeedback, Label, InputGroup, InputGroupAddon } from 'reactstrap';
-import { connect } from 'react-redux';
+
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
 //redux store
-import { loginUser, apiError } from '../../redux/actions';
+//import { loginUser, apiError } from '../../redux/actions';
 
 //Import Images
 import logodark from "../../assets/images/logo-dark.png";
@@ -19,13 +19,31 @@ import logolight from "../../assets/images/logo-light.png";
  * Login component
  * @param {*} props 
  */
+
+function loginUser(username, password, history ) {
+    try {
+            console.log(`${username}  ${password}`)
+        
+           // const response = yield call(create, '/login', { username, password });
+            localStorage.setItem("authUser", JSON.stringify({"id":1,"name":"Chatvia","username":"themesbrand","password":"123456","email":"admin@themesbrand.com","role":"role","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb2RlcnRoZW1lcyIsImlhdCI6MTU4NzM1NjY0OSwiZXhwIjoxOTAyODg5NDQ5LCJhdWQiOiJjb2RlcnRoZW1lcy5jb20iLCJzdWIiOiJzdXBwb3J0QGNvZGVydGhlbWVzLmNvbSIsImxhc3ROYW1lIjoiVGVzdCIsIkVtYWlsIjoic3VwcG9ydEBjb2RlcnRoZW1lcy5jb20iLCJSb2xlIjoiQWRtaW4iLCJmaXJzdE5hbWUiOiJIeXBlciJ9.P27f7JNBF-vOaJFpkn-upfEh3zSprYfyhTOYhijykdI"}));
+            //yield put(loginUserSuccess(response));
+            history.push('/dashboard');
+            
+        
+    } catch (error) {
+       // yield put(apiError(error));
+       console.log(error)
+    }
+}
+
 const Login = (props) => {
 
     /* intilize t variable for multi language implementation */
     const { t } = useTranslation();
 
     const clearError = () => {
-        props.apiError("");
+       // props.apiError("");
+       //props.dispatch
     }
     
     useEffect(clearError, []);
@@ -41,7 +59,9 @@ const Login = (props) => {
             password: Yup.string().required('Please Enter Your Password')
         }),
         onSubmit: values => {
-            props.loginUser(values.email, values.password, props.history);
+            loginUser(values.email, values.password, props.history);
+            props.dispatch({type: 'LOGIN_USER_SUCCESS' , payload: '{"id":1,"name":"Chatvia","username":"themesbrand","password":"123456","email":"admin@themesbrand.com","role":"role","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb2RlcnRoZW1lcyIsImlhdCI6MTU4NzM1NjY0OSwiZXhwIjoxOTAyODg5NDQ5LCJhdWQiOiJjb2RlcnRoZW1lcy5jb20iLCJzdWIiOiJzdXBwb3J0QGNvZGVydGhlbWVzLmNvbSIsImxhc3ROYW1lIjoiVGVzdCIsIkVtYWlsIjoic3VwcG9ydEBjb2RlcnRoZW1lcy5jb20iLCJSb2xlIjoiQWRtaW4iLCJmaXJzdE5hbWUiOiJIeXBlciJ9.P27f7JNBF-vOaJFpkn-upfEh3zSprYfyhTOYhijykdI"}'})
+
         },
     });
 
@@ -157,9 +177,10 @@ const Login = (props) => {
 }
 
 
-const mapStateToProps = (state) => {
-    const { user, loading, error } = state.Auth;
-    return { user, loading, error };
-};
+// const mapStateToProps = (state) => {
+//     const { user, loading, error } = state.Auth;
+//     return { user, loading, error };
+// };
 
-export default withRouter(connect(mapStateToProps, { loginUser, apiError })(Login));
+//export default withRouter(connect(mapStateToProps, { loginUser, apiError })(Login));
+export default withRouter(Login)

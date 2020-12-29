@@ -5,7 +5,7 @@ import classnames from "classnames";
 
 import logo from "../../assets/images/logo.svg"
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
-import {Context} from "../../App"
+import {Context} from "../../store"
 //i18n
 import i18n from '../../i18n';
 

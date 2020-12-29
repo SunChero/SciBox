@@ -10,7 +10,7 @@ function Client(server, nick, opt) {
     var self = this;
     self.opt = {
         server: server,
-        nick: "SunChero",
+        nick: "SunChero22",
         password: null,
         userName: 'nodebot',
         realName: 'nodeJS IRC client',
@@ -687,7 +687,7 @@ Client.prototype.chanData = function(name, create) {
 };
 
 Client.prototype._connectionHandler = function() {
-    console.log(this)
+    //console.log(this)
     // if (this.opt.webirc.ip && this.opt.webirc.pass && this.opt.webirc.host) {
     //     this.send('WEBIRC', this.opt.webirc.pass, this.opt.userName, this.opt.webirc.host, this.opt.webirc.ip);
     // }

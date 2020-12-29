@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Context} from "../../App"
+
 import { TabContent, TabPane } from "reactstrap";
 
 //Import Components

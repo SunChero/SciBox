@@ -112,6 +112,8 @@ function UserChat(props) {
         copyallUsers[props.active_user].isTyping = false;
         props.dispatch({type: 'FULL_USER',
             payload:copyallUsers});
+        props.dispatch({type: 'SENDMSG',
+            payload:messageObj});
 
         scrolltoBottom();
     }
