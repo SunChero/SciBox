@@ -3,22 +3,22 @@ import React from 'react';
 
 import { TabContent, TabPane } from "reactstrap";
 
-//Import Components
 import Profile from "./Tabs/Profile";
 import Chats from "./Tabs/Chats";
 import Groups from "./Tabs/Groups";
 import Contacts from "./Tabs/Contacts";
 import Settings from "./Tabs/Settings";
-
-function ChatLeftSidebar(props) {
+import {repo} from "../../mobx/store"
+import {useProxy} from "valtio"
+function ChatLeftSidebar() {
    
-    const activeTab = props.activeTab;
+   const snapshot = useProxy(repo)
     
     return (
         <React.Fragment>
             <div className="chat-leftsidebar mr-lg-1">
 
-                <TabContent activeTab={props.activeTab}>
+                <TabContent activeTab={snapshot.activeTab}>
                     {/* Start Profile tab-pane */}
                     <TabPane tabId="profile" id="pills-user">
                         {/* profile content  */}
@@ -29,21 +29,21 @@ function ChatLeftSidebar(props) {
                     {/* Start chats tab-pane  */}
                     <TabPane tabId="chat" id="pills-chat">
                         {/* chats content */}
-                        <Chats {...props}/>
+                        <Chats/>
                     </TabPane>
                     {/* End chats tab-pane */}
                     
                     {/* Start groups tab-pane */}
                     <TabPane tabId="group" id="pills-groups">
                         {/* Groups content */}
-                        <Groups {...props} />
+                        <Groups />
                     </TabPane>
                     {/* End groups tab-pane */}
 
                     {/* Start contacts tab-pane */}
                     <TabPane tabId="contacts" id="pills-contacts">
                         {/* Contact content */}
-                        <Contacts {...props}/>
+                        <Contacts/>
                     </TabPane>
                     {/* End contacts tab-pane */}
                     

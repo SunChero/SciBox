@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Nav, NavItem, NavLink, UncontrolledTooltip, Dropdown, DropdownItem, DropdownToggle, DropdownMenu } from "reactstrap";
 import classnames from "classnames";
-
 import logo from "../../assets/images/logo.svg"
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
-import {Context} from "../../store"
-//i18n
+import {repo} from "../../mobx/store"
+import {useProxy} from "valtio"
 import i18n from '../../i18n';
-
 // falgs
 import usFlag from "../../assets/images/flags/us.jpg";
 import spain from "../../assets/images/flags/spain.jpg";
@@ -16,27 +14,16 @@ import germany from "../../assets/images/flags/germany.jpg";
 import italy from "../../assets/images/flags/italy.jpg";
 import russia from "../../assets/images/flags/russia.jpg";
 
-function LeftSidebarMenu(props) {
-    const {state, dispatch} = React.useContext(Context)
-
+function LeftSidebarMenu() {
+    var snapshot = useProxy(repo)
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownOpen2, setDropdownOpen2] = useState(false);
     const [dropdownOpenMobile, setDropdownOpenMobile] = useState(false);
     const [ lng, setlng ] = useState("English");
-
     const toggle = () => setDropdownOpen(!dropdownOpen);
     const toggle2 = () => setDropdownOpen2(!dropdownOpen2);
     const toggleMobile = () => setDropdownOpenMobile(!dropdownOpenMobile);
-
-    const toggleTab = tab => {
-        dispatch({
-            type: 'SET_ACTIVE_TAB',
-            payload: tab
-        })
-    }
-   
-    const activeTab = state.activeTab;
-    
+    const toggleTab = tab =>  repo.activeTab = tab
     /* changes language according to clicked language menu item */
     const changeLanguageAction = (lng) => {
         
@@ -78,7 +65,7 @@ function LeftSidebarMenu(props) {
                 <div className="flex-lg-column my-auto">
                     <Nav pills className="side-menu-nav justify-content-center" role="tablist">
                         <NavItem id="profile">
-                            <NavLink id="pills-user-tab" className={classnames({ active: activeTab === 'profile' })} onClick={() => { toggleTab('profile'); }}>
+                            <NavLink id="pills-user-tab" className={classnames({ active: snapshot.activeTab === 'profile' })} onClick={() => { toggleTab('profile'); }}>
                                 <i className="ri-user-2-line"></i>
                             </NavLink>
                         </NavItem>
@@ -86,7 +73,7 @@ function LeftSidebarMenu(props) {
                             Profile
                         </UncontrolledTooltip>
                         <NavItem id="Chats">
-                            <NavLink id="pills-chat-tab" className={classnames({ active: activeTab === 'chat' })} onClick={() => { toggleTab('chat'); }}>
+                            <NavLink id="pills-chat-tab" className={classnames({ active: snapshot.activeTab === 'chat' })} onClick={() => { toggleTab('chat'); }}>
                                 <i className="ri-message-3-line"></i>
                             </NavLink>
                         </NavItem>
@@ -94,7 +81,7 @@ function LeftSidebarMenu(props) {
                         Chats
                         </UncontrolledTooltip>
                         <NavItem id="Groups">
-                            <NavLink id="pills-groups-tab" className={classnames({ active: activeTab === 'group' })} onClick={() => { toggleTab('group'); }}>
+                            <NavLink id="pills-groups-tab" className={classnames({ active: snapshot.activeTab === 'group' })} onClick={() => { toggleTab('group'); }}>
                                 <i className="ri-group-line"></i>
                             </NavLink>
                         </NavItem>
@@ -102,7 +89,7 @@ function LeftSidebarMenu(props) {
                         Groups
                         </UncontrolledTooltip>
                         <NavItem id="Contacts">
-                            <NavLink id="pills-contacts-tab" className={classnames({ active: activeTab === 'contacts' })} onClick={() => { toggleTab('contacts'); }}>
+                            <NavLink id="pills-contacts-tab" className={classnames({ active: snapshot.activeTab === 'contacts' })} onClick={() => { toggleTab('contacts'); }}>
                                 <i className="ri-contacts-line"></i>
                             </NavLink>
                         </NavItem>
@@ -110,7 +97,7 @@ function LeftSidebarMenu(props) {
                         Contacts
                         </UncontrolledTooltip>
                         <NavItem id="Settings">
-                            <NavLink id="pills-setting-tab" className={classnames({ active: activeTab === 'settings' })} onClick={() => { toggleTab('settings'); }}>
+                            <NavLink id="pills-setting-tab" className={classnames({ active: snapshot.activeTab === 'settings' })} onClick={() => { toggleTab('settings'); }}>
                                 <i className="ri-settings-2-line"></i>
                             </NavLink>
                         </NavItem>

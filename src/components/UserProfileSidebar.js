@@ -1,25 +1,20 @@
 import React, { useState } from 'react';
-import { connect } from "react-redux";
 import { Button, Card, Media, Badge } from "reactstrap";
-
 //Simple bar
 import SimpleBar from "simplebar-react";
-
 //components
 import AttachedFiles from "./AttachedFiles";
 import CustomCollapse from "./CustomCollapse";
-
 //actions
 import { closeUserSidebar } from "../redux/actions";
-
 //i18n
 import { useTranslation } from 'react-i18next';
-
 //image
 import avatar7 from "../assets/images/users/avatar-7.jpg";
-
+import {repo , getUser} from "../mobx/store"
+import {useProxy} from "valtio"
 function UserProfileSidebar(props) {
-    
+    var snapshot = useProxy(repo)
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen3, setIsOpen3] = useState(false);
@@ -53,12 +48,12 @@ function UserProfileSidebar(props) {
 
     // closes sidebar
     const closeuserSidebar=()=> {
-        props.dispatch({type: 'CLOSE_USER_PROFILE_SIDEBAR'})
+        repo.userSidebar = false
     }
     // style={{display: props.userSidebar  ? "block" : "none"}}
     return (
         <React.Fragment>
-           <div style={{display: (props.userSidebar === true)  ? "block" : "none"}} className="user-profile-sidebar">
+           <div style={{display: (snapshot.userSidebar === true)  ? "block" : "none"}} className="user-profile-sidebar">
                         <div className="px-3 px-lg-4 pt-3 pt-lg-4">
                             <div className="user-chat-nav text-right">
                                 <Button color="none" type="button" onClick={closeuserSidebar} className="nav-btn" id="user-profile-hide">
@@ -71,21 +66,21 @@ function UserProfileSidebar(props) {
 
                             <div className="mb-4 d-flex justify-content-center">
                                 {
-                                    props.activeUser.profilePicture ==="Null" ?
+                                    getUser()[0].profilePicture ==="Null" ?
                                         <div className="avatar-lg">
                                             <span className="avatar-title rounded-circle bg-soft-primary text-primary font-size-24">
-                                                {props.activeUser.name.charAt(0)}
+                                                {getUser()[0].name.charAt(0)}
                                             </span>
                                         </div>
-                                    : <img src={props.activeUser.profilePicture} className="rounded-circle avatar-lg img-thumbnail" alt="chatvia" />
+                                    : <img src={getUser()[0].profilePicture} className="rounded-circle avatar-lg img-thumbnail" alt="chatvia" />
                                 }
                                 
                             </div>
 
-                            <h5 className="font-size-16 mb-1 text-truncate">{props.activeUser.name}</h5>
+                            <h5 className="font-size-16 mb-1 text-truncate">{getUser()[0].name}</h5>
                             <p className="text-muted text-truncate mb-1">
                             {(() => {
-                                                                                    switch (props.activeUser.status) {
+                                                                                    switch (getUser()[0].status) {
                                                                                         case "online":
                                                                                             return (
                                                                                                 <>
@@ -134,12 +129,12 @@ function UserProfileSidebar(props) {
 
                                             <div>
                                                 <p className="text-muted mb-1">{t('Name')}</p>
-                                                <h5 className="font-size-14">{props.activeUser.name}</h5>
+                                                <h5 className="font-size-14">{getUser()[0].name}</h5>
                                             </div>
 
                                             <div className="mt-4">
                                                 <p className="text-muted mb-1">{t('Email')}</p>
-                                                <h5 className="font-size-14">{props.activeUser.email}</h5>
+                                                <h5 className="font-size-14">{getUser()[0].email}</h5>
                                             </div>
 
                                             <div className="mt-4">
@@ -169,7 +164,7 @@ function UserProfileSidebar(props) {
                                 </Card>
 
                                 {
-                                    props.activeUser.isGroup === true &&
+                                    getUser()[0].isGroup === true &&
                                     <Card className="mb-1 shadow-none border">
                                         {/* import collaps */}
                                         <CustomCollapse

@@ -1,43 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect,useState } from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media, Button, Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledTooltip, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, } from 'reactstrap';
 import SimpleBar from "simplebar-react";
-
-import { connect } from "react-redux";
-
 import { withTranslation } from 'react-i18next';
+import {repo} from "../../../mobx/store"
+import {useProxy} from "valtio"
 
-//use sortedContacts variable as global variable to sort contacts
 let sortedContacts = [
     { group : "A",
         children : [{name : "Demo"}]
     }
 ]
+const  Contacts = (props) => {
+    const snapshot = useProxy(repo)
+    const [modal, setModal] = useState(false)
+    const [contacts, setContacts] = useState(snapshot.contacts)
+   
+    
+    
 
-class Contacts extends Component {
-    constructor(props) {
-        super(props);
-        this.state={
-            modal : false,
-            contacts : this.props.contacts
-        }
-        this.toggle = this.toggle.bind(this);
-        this.sortContact = this.sortContact.bind(this);
-    }
+    const toggle = () =>  setModal(!modal)
 
-    componentDidUpdate(prevProps) {
-        if (prevProps !== this.props) {
-          this.setState({
-            contacts : this.props.contacts
-          });
-        }
-    }
-
-    toggle() {
-        this.setState({modal : !this.state.modal});
-    }
-
-    sortContact(){
-        let data = this.state.contacts.reduce((r, e) => {
+    const sortContact = () => {
+        let data = contacts.reduce((r, e) => {
             try {
                 // get first letter of name of current element
                 let group = e.name[0];
@@ -55,29 +39,23 @@ class Contacts extends Component {
         // since data at this point is an object, to get array of values
         // we use Object.values method
         let result = Object.values(data);
-        this.setState({contacts : result});
+        setContacts(result)
         sortedContacts = result;
         return result;
     }
-
-    componentDidMount(){
-        this.sortContact();
-    }
-
-    componentWillUnmount(){
-        this.sortContact();
-    }
-    
-    render() {
-        const { t } = this.props;
-        return (
+    useEffect(()=>{
+        sortContact()
+    },[])
+       
+    const { t } = props;
+    return (
             <React.Fragment>
             <div>
                             <div className="p-4">
                                 <div className="user-chat-nav float-right">
                                     <div id="add-contact">
                                         {/* Button trigger modal */}
-                                        <Button type="button" color="link" onClick={this.toggle} className="text-decoration-none text-muted font-size-18 py-0">
+                                        <Button type="button" color="link" onClick={toggle} className="text-decoration-none text-muted font-size-18 py-0">
                                             <i className="ri-user-add-line"></i>
                                         </Button>
                                     </div>
@@ -88,8 +66,8 @@ class Contacts extends Component {
                                 <h4 className="mb-4">Contacts</h4>
 
                                 {/* Start Add contact Modal */}
-                                <Modal isOpen={this.state.modal} centered toggle={this.toggle}>
-                                            <ModalHeader tag="h5" className="font-size-16" toggle={this.toggle}>
+                                <Modal isOpen={modal} centered toggle={toggle}>
+                                            <ModalHeader tag="h5" className="font-size-16" toggle={toggle}>
                                                 {t('Add Contacts')}
                                             </ModalHeader>
                                             <ModalBody className="p-4">
@@ -105,7 +83,7 @@ class Contacts extends Component {
                                                 </Form>
                                             </ModalBody>
                                             <ModalFooter>
-                                                <Button type="button" color="link" onClick={this.toggle}>Close</Button>
+                                                <Button type="button" color="link" onClick={toggle}>Close</Button>
                                                 <Button type="button" color="primary">Invite Contact</Button>
                                             </ModalFooter>
                                 </Modal>
@@ -167,12 +145,9 @@ class Contacts extends Component {
                         </div>
         </React.Fragment>
         );
-    }
+    
 }
 
-// const mapStateToProps = (state) => {
-//     const { contacts } = state.Chat;
-//     return { contacts };
-// };
+
 
 export default withTranslation()(Contacts);

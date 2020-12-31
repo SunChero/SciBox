@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Media, Button, Input, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
-
+import {useProxy} from "valtio"
+import {repo, getConversation, deleteMessage} from "../../../mobx/store"
 
 function UserHead(props) {
-   
+    const snapshot = useProxy(repo)
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownOpen1, setDropdownOpen1] = useState(false);
-
     const toggle = () => setDropdownOpen(!dropdownOpen);
     const toggle1 = () => setDropdownOpen1(!dropdownOpen1);
-
     const openUserSidebar = (e) => {
         e.preventDefault();
-        //props.openUserSidebar();
-        props.dispatch({type: 'OPEN_USER_PROFILE_SIDEBAR'})
+        repo.userSidebar = true
     }
-
     function closeUserChat(e){
         e.preventDefault();
         var userChat = document.getElementsByClassName("user-chat");
@@ -24,16 +21,6 @@ function UserHead(props) {
             userChat[0].classList.remove("user-chat-show");
         }
     }
-
-    function deleteMessage()
-    {
-         let allUsers = props.users;
-        let copyallUsers = allUsers;
-        copyallUsers[props.active_user].messages =  [];
-       
-        props.dispatch({type:"FULL_USER" , payload :copyallUsers});
-    }
-
     return (
         <React.Fragment>
             <div className="p-3 p-lg-4 border-bottom">
@@ -45,14 +32,14 @@ function UserHead(props) {
                                             <i className="ri-arrow-left-s-line"></i></Link>
                                         </div>
                                         {
-                                            props.users[props.active_user].profilePicture !== "Null" ?
+                                            getConversation()[0].profilePicture !== "Null" ?
                                                 <div className="mr-3">
-                                                    <img src={props.users[props.active_user].profilePicture} className="rounded-circle avatar-xs" alt="chatvia" />
+                                                    <img src={getConversation()[0].profilePicture} className="rounded-circle avatar-xs" alt="chatvia" />
                                                 </div>
                                             :   <div className="chat-user-img align-self-center mr-3">
                                                     <div className="avatar-xs">
                                                         <span className="avatar-title rounded-circle bg-soft-primary text-primary">
-                                                            {props.users[props.active_user].name.charAt(0)}
+                                                            {getConversation()[0].name.charAt(0)}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -61,10 +48,10 @@ function UserHead(props) {
                                         <Media body className="overflow-hidden">
                                             <h5 className="font-size-16 mb-0 text-truncate">
                                             <Link to="#" onClick={(e) => openUserSidebar(e)} className="text-reset user-profile-show">
-                                            {props.users[props.active_user].name}
+                                            {getConversation()[0].name}
                                             </Link> 
                                                                                 {(() => {
-                                                                                    switch (props.users[props.active_user].status) {
+                                                                                    switch (getConversation()[0].status) {
                                                                                         case "online":
                                                                                             return (
                                                                                                 <>
@@ -140,10 +127,4 @@ function UserHead(props) {
 }
 
 
-// const mapStateToProps = (state) => {
-//     const { users,active_user } = state.Chat;
-//     return { ...state.Layout,users,active_user };
-// };
-
-//export default connect(mapStateToProps, { openUserSidebar,setFullUser })(UserHead);
 export default UserHead

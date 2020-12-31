@@ -1,96 +1,76 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledTooltip, Form, FormGroup, Label, Input, Collapse, CardHeader, CardBody, Alert, InputGroup, InputGroupAddon, Media, Card, Badge } from 'reactstrap';
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 
+import {repo} from "../../../mobx/store"
+import {useProxy} from "valtio"
 import { withTranslation } from 'react-i18next';
 
-//simple bar
 import SimpleBar from "simplebar-react";
 
 //components
 import SelectContact from "../../../components/SelectContact";
 
-//actions
-import { createGroup } from "../../../redux/actions";
 
-class Groups extends Component {
+const Groups = (props) => {
+    const snapshot = useProxy(repo)
+    const [modal, setModal] = useState(false)
+    const [isOpenCollapse, setisOpenCollapse] = useState(false)
+    const [groups, setgroups] = useState(snapshot.groups)
+    const [selectedContact, setselectedContact] = useState([])
+    const [isOpenAlert, setisOpenAlert] = useState(false)
+    const [message, setmessage] = useState("")
+    const [groupName, setgroupName] = useState("")
+    const [groupDesc, setgroupDesc] = useState("")
+   
+
+    const toggle = () => {
+        setModal(!modal)
+    }
+
+    const toggleCollapse = () => {
+        setisOpenCollapse(!isOpenCollapse)
+    }
+
     
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            modal : false,
-            isOpenCollapse : false,
-            groups : this.props.groups,
-            selectedContact : [],
-            isOpenAlert : false,
-            message : "",
-            groupName : "",
-            groupDesc : ""
-        }
-        this.toggle = this.toggle.bind(this);
-        this.toggleCollapse = this.toggleCollapse.bind(this);
-        this.createGroup = this.createGroup.bind(this);
-        this.handleCheck = this.handleCheck.bind(this);
-        this.handleChangeGroupName = this.handleChangeGroupName.bind(this);
-        this.handleChangeGroupDesc = this.handleChangeGroupDesc.bind(this);
-        console.log(this.props)
-    }
 
-    toggle() {
-        this.setState({ modal : !this.state.modal });
-    }
-
-    toggleCollapse() {
-        this.setState({ isOpenCollapse : !this.state.isOpenCollapse });
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps !== this.props) {
-          this.setState({
-            groups : this.props.groups
-          });
-        }
-    }
-
-    createGroup(){
-        if(this.state.selectedContact.length > 2) {
+    const createGroup = () => {
+        if(selectedContact.length > 2) {
             // gourpId : 5, name : "#Project-aplha", profilePicture : "Null", isGroup : true, unRead : 0, isNew : true, desc : "project related Group",
             var obj = {
-                gourpId : this.state.groups.length+1,
-                name : "#" + this.state.groupName,
+                gourpId : groups.length+1,
+                name : "#" + groupName,
                 profilePicture : "Null",
                 isGroup : true,
                 unRead : 0,
                 isNew : true,
-                desc : this.state.groupDesc,
-                members : this.state.selectedContact
+                desc : groupDesc,
+                members : selectedContact
             }
             //call action for creating a group
            // this.props.createGroup(obj);
-           this.props.dispatch({
-               type: 'CREATE_GROUP',
-               payload: obj
-           })
-            this.toggle();
+           toggle();
 
-        } else if(this.state.selectedContact.length === 1) {
-            this.setState({message : "Minimum 2 members required!!!", isOpenAlert: true});
+        } else if(selectedContact.length === 1) {
+            setmessage("Minimum 2 members required!!!")
+            setisOpenAlert(true)
+            
         } else {
-            this.setState({message : "Please Select Members!!!", isOpenAlert: true});
+            setmessage("Minimum 2 members required!!!")
+            setisOpenAlert(true)
+            
         }
         setTimeout(
             function() {
-                this.setState({ isOpenAlert: false });
+                setisOpenAlert(false)
             }
             .bind(this),
             3000
         );
     }
 
-    handleCheck(e, contactId) {
-        var selected = this.state.selectedContact;
+    const handleCheck = (e, contactId) => {
+        var selected = selectedContact;
         var obj;
         if(e.target.checked) {
             obj = {
@@ -98,20 +78,20 @@ class Groups extends Component {
                 name : e.target.value 
             };
             selected.push(obj);
-            this.setState({selectedContact : selected})
+           
+            setselectedContact(selected)
         }
     }
 
-    handleChangeGroupName(e) {
-        this.setState({groupName : e.target.value});
+    const handleChangeGroupName = (e) => {
+        setgroupName(e.target.value);
     }
 
-    handleChangeGroupDesc(e) {
-        this.setState({groupDesc : e.target.value});
+    const handleChangeGroupDesc = (e) => {
+       setgroupDesc(e.target.value);
     }
-    
-    render() {
-        const { t } = this.props;
+    const { t } = props;
+     
         return (
             <React.Fragment>
             <div>
@@ -119,7 +99,7 @@ class Groups extends Component {
                                 <div className="user-chat-nav float-right">
                                     <div  id="create-group">
                                         {/* Button trigger modal */}
-                                        <Button onClick={this.toggle} type="button" color="link" className="text-decoration-none text-muted font-size-18 py-0">
+                                        <Button onClick={toggle} type="button" color="link" className="text-decoration-none text-muted font-size-18 py-0">
                                             <i className="ri-group-line mr-1"></i>
                                         </Button>
                                     </div>
@@ -131,26 +111,26 @@ class Groups extends Component {
                                 <h4 className="mb-4">{t('Groups')}</h4>
 
                                 {/* Start add group Modal */}
-                                <Modal isOpen={this.state.modal} centered toggle={this.toggle}>
-                                            <ModalHeader tag="h5" className="modal-title font-size-16" toggle={this.toggle}>{t('Create New Group')}</ModalHeader>
+                                <Modal isOpen={modal} centered toggle={toggle}>
+                                            <ModalHeader tag="h5" className="modal-title font-size-16" toggle={toggle}>{t('Create New Group')}</ModalHeader>
                                             <ModalBody className="p-4">
                                                 <Form>
                                                     <FormGroup className="mb-4">
                                                         <Label htmlFor="addgroupname-input">{t('Group Name')}</Label>
-                                                        <Input type="text" className="form-control" id="addgroupname-input" value={this.state.groupName} onChange={(e) => this.handleChangeGroupName(e)} placeholder="Enter Group Name" />
+                                                        <Input type="text" className="form-control" id="addgroupname-input" value={groupName} onChange={(e) => handleChangeGroupName(e)} placeholder="Enter Group Name" />
                                                     </FormGroup>
                                                     <FormGroup className="mb-4">
                                                         <Label>{t('Group Members')}</Label>
-                                                        <Alert isOpen={this.state.isOpenAlert} color="danger">
-                                                            {this.state.message}
+                                                        <Alert isOpen={isOpenAlert} color="danger">
+                                                            {message}
                                                         </Alert>
                                                         <div className="mb-3">
-                                                            <Button color="light" size="sm" type="button" onClick={this.toggleCollapse}>
+                                                            <Button color="light" size="sm" type="button" onClick={toggleCollapse}>
                                                                 {t('Select Members')}
                                                             </Button>
                                                         </div>
 
-                                                        <Collapse isOpen={this.state.isOpenCollapse} id="groupmembercollapse">
+                                                        <Collapse isOpen={isOpenCollapse} id="groupmembercollapse">
                                                             <Card className="border">
                                                                 <CardHeader>
                                                                     <h5 className="font-size-15 mb-0">{t('Contacts')}</h5>
@@ -159,7 +139,7 @@ class Groups extends Component {
                                                                     <SimpleBar style={{maxHeight: "150px"}}>
                                                                         {/* contacts */}
                                                                         <div id="addContacts">
-                                                                            <SelectContact handleCheck={this.handleCheck} />
+                                                                            <SelectContact handleCheck={handleCheck} />
                                                                         </div>
                                                                     </SimpleBar>
                                                                 </CardBody>
@@ -168,13 +148,13 @@ class Groups extends Component {
                                                     </FormGroup>
                                                     <FormGroup>
                                                         <Label htmlFor="addgroupdescription-input">Description</Label>
-                                                        <textarea className="form-control" id="addgroupdescription-input" value={this.state.groupDesc} onChange={(e) => this.handleChangeGroupDesc(e)} rows="3" placeholder="Enter Description"></textarea>
+                                                        <textarea className="form-control" id="addgroupdescription-input" value={groupDesc} onChange={(e) => handleChangeGroupDesc(e)} rows="3" placeholder="Enter Description"></textarea>
                                                     </FormGroup>
                                                 </Form>
                                             </ModalBody>
                                             <ModalFooter>
-                                                <Button type="button" color="link" onClick={this.toggle}>{t('Close')}</Button>
-                                                <Button type="button" color="primary" onClick={this.createGroup}>Create Group</Button>
+                                                <Button type="button" color="link" onClick={toggle}>{t('Close')}</Button>
+                                                <Button type="button" color="primary" onClick={createGroup}>Create Group</Button>
                                             </ModalFooter>
                                 </Modal>
                                 {/* End add group Modal */}
@@ -198,7 +178,7 @@ class Groups extends Component {
 
                                 <ul className="list-unstyled chat-list">
                                     {
-                                       this.state.groups.map((group, key) =>
+                                       groups.map((group, key) =>
                                             <li key={key} >
                                                 <Link to="#">
                                                     <Media className="align-items-center">
@@ -239,12 +219,12 @@ class Groups extends Component {
                         </div>
         </React.Fragment>
         );
-    }
+    
 }
 
-const mapStateToProps = (state) => {
-    const { groups, active_user } = state.Chat;
-    return { groups,active_user };
-};
+// const mapStateToProps = (state) => {
+//     const { groups, active_user } = state.Chat;
+//     return { groups,active_user };
+// };
 
 export default withTranslation()(Groups);
