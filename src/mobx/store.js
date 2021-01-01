@@ -14,6 +14,7 @@ import {Connect , Send} from "./irc"
 
 
 const data = {
+    me:"",
     activeTab : "chat",
     activePane: 0,
 	userSidebar : false,
@@ -186,7 +187,7 @@ const data = {
     
 };
 
-Connect()
+
 export const repo = proxy(data)
 export const getConversation = () =>{
     return repo.recentChatList.filter( r  => r.id == repo.active_user)
@@ -217,6 +218,7 @@ export const addMessage = (msg) => {
     console.log(`converstation ${conversation} `)
     var filtered = conversation.messages.push(msg)
     setConversation(conversation.name , conversation.messages)
+    Send(conversation.name , msg.message)
 }
 export const addMessageToConversation = (dst , msg) => {
    repo.recentChatList.map( c => {
@@ -226,6 +228,8 @@ export const addMessageToConversation = (dst , msg) => {
     
 }
 export const createConversation = (name) => {
-    let conv =  {id : nanoid(), name : name, profilePicture : "Null", status : "away",unRead : 0, isGroup: true, messages: []}
+    let conv =  {id : nanoid(), name : name, profilePicture : "Null", status : "away",unRead : 0, isGroup: false, messages: []}
     repo.recentChatList.push(conv)
 }
+
+Connect()

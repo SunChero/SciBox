@@ -6,26 +6,30 @@ let ws = null
 
 export const Connect = () => {
         const nick = nanoid()
+        repo.me = nick
         if (ws == null) ws =  new WebSocket("wss://ws.hanifi.ca:8097")
+        
         ws.onmessage = async(e) =>{
-            await new Promise(r => setTimeout(r, 4000));
+            await new Promise(r => setTimeout(r, 1000));
             if (e.data.startsWith("PING")) return ws.send("PONG " + e.data.split(" ")[1])
             let msgs = e.data.split(' ')
+            console.log(JSON.stringify(msgs))
             let src = msgs[0]
+            src = src.split('!')[0].slice(1)
             let type = msgs[1]
             let dst = msgs[2]
             let msg = e.data.split(':')[2]
             let exist = false
             if  (type == 'PRIVMSG') {
                 repo.recentChatList.map(conv => {
-                    if (conv.name == dst){
+                    if (conv.name == src){
                         exist =true
-                        addMessageToConversation( dst,
+                        addMessageToConversation( src,
                             {
                                id : nanoid(),
                                message : msg,
                                time : "00:" ,
-                               userType : "sender",
+                               userType : "receiver",
                                image : "Null",
                                isFileMessage : false,
                                isImageMessage : false
@@ -33,13 +37,13 @@ export const Connect = () => {
                     }
                 })
                 if (exist)  return 
-                createConversation(dst)
-                addMessageToConversation( dst,
+                createConversation(src)
+                addMessageToConversation( src,
                     {
                        id : nanoid(),
                        message : msg,
                        time : "00:" ,
-                       userType : "sender",
+                       userType : "receiver",
                        image : "Null",
                        isFileMessage : false,
                        isImageMessage : false
@@ -47,8 +51,22 @@ export const Connect = () => {
 
             }           
             
-            else if  (type == 'JOIN') { createConversation(dst)}
+            else if  (type == 'JOIN') {
+                repo.recentChatList.map(conv => {
+                    if (conv.name == dst){
+                        exist =true
+                    }
+                })
+                if (exist)  return 
+                createConversation(dst)
+                
+
+                    
+              
+            }
             console.log(e.data)
+        
+        
         }
         ws.onopen = (e) => {
             ws.send("USER sun sun sun sun")
@@ -58,8 +76,8 @@ export const Connect = () => {
         ws.onclose = (e)  => console.log(`${e.data} ` )
         ws.onerror = (e) => console.log(`${e.data}` )
     }
-export const Send = (msg, dst) => {
-    ws.send(`PRIVMSG ${msg} ${dst}`)
+export const Send = (dst, msg) => {
+    ws.send(`PRIVMSG ${dst} ${msg}`)
 }
 
 
