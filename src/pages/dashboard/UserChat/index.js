@@ -23,7 +23,9 @@ function UserChat(props) {
 
     const [ allUsers ] = useState(snapshot.recentChatList);
     const [ chatMessages, setchatMessages ] = useState(getConversation()[0].messages);
-    
+    useEffect(() =>{
+        scrolltoBottom()
+    },[])
     const toggle = () => setModal(!modal);
     const createMessage = (message, type) => {
         var messageObj = null;
@@ -84,21 +86,25 @@ function UserChat(props) {
     }
     function scrolltoBottom(){
         if (ref.current.el) {
-            ref.current.getScrollElement().scrollTop = ref.current.getScrollElement().scrollHeight;
+            console.log(ref.current.getScrollElement().scrollHeight)
+            setTimeout(()=>{
+                ref.current.getScrollElement().scrollTop = ref.current.getScrollElement().scrollHeight 
+            }, 200)
+            
         }
     }
     
-    console.log(`conversation return ${JSON.stringify(getConversation())}`)
+    
     return (
         <React.Fragment>
             <div className="user-chat w-100">
                 
                 <div className="d-lg-flex">
 
-                    <div className={ snapshot.userSidebar ? "w-70" : "w-100" }>
+                    <div className={ snapshot.userSidebar ? "w-70" : "w-100" } >
 
                         {/* render user head */}
-                        <UserHead /> 
+                        <UserHead   /> 
 
                             <SimpleBar
                                 style={{ maxHeight: "100%" }}

@@ -16,9 +16,17 @@ function ChatInput(props) {
 
     //function for text input value change
     const handleChange = e => {
-        settextMessage(e.target.value)
+                settextMessage(e.target.value)
+               // console.log(e.which)
     }
-
+    const onKeypress = (e) =>{
+        console.log(`target value ${e.target.value}`)
+        settextMessage(e.target.value)
+        if (e.which == 13) {
+            console.log(`key enter`)
+            onaddMessage(e.target.value)
+        }
+    }
     //function for add emojis
     const addEmoji = e => {
         let emoji = e.native;
@@ -41,8 +49,8 @@ function ChatInput(props) {
     }
 
     //function for send data to onaddMessage function(in userChat/index.js component)
-    const onaddMessage = (e, textMessage) => {
-        e.preventDefault();
+    const onaddMessage = ( textMessage , e = false)  => {
+        if (e) e.preventDefault();
         //if text value is not emptry then call onaddMessage function
         if(textMessage !== "") {
             props.onaddMessage(textMessage, "textMessage");
@@ -68,11 +76,11 @@ function ChatInput(props) {
     return (
         <React.Fragment>
             <div className="p-3 p-lg-4 border-top mb-0">
-                            <Form onSubmit={(e) => onaddMessage(e, textMessage)} >
+                            <Form onSubmit={(e) => onaddMessage(textMessage, e)} >
                                 <Row noGutters>
                                     <Col>
                                         <div>
-                                            <Input type="text" value={textMessage} onChange={handleChange} className="form-control form-control-lg bg-light border-light" placeholder="Enter Message..." />
+                                            <Input type="text" value={textMessage} onChange={onKeypress} onKeyPress={onKeypress}  className="form-control form-control-lg bg-light border-light" placeholder="Enter Message..." />
                                         </div>
                                     </Col>
                                     <Col xs="auto">
